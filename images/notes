@@ -1,0 +1,1 @@
+convert -limit memory 8GiB -limit map 8GiB -limit   disk 10GiB  -resize  1080x1080 -delay 100 -loop 0 DSC*.JPG books.gif

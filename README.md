@@ -3,7 +3,6 @@ personal site for a great friend
 
 [maxinetsang.com](http://maxinetsang.com/)
 
-![](img/demo.gif)
 
 ## Getting Started :memo:
 
@@ -18,8 +17,6 @@ sass --watch css/main.scss:css/main.css
 As long as you keep this terminal window open, sass will keep main.css up-to-date in the background
 
 Make your changes to main.scss :)
-
-![](img/pingu.gif)
 
 ## Recognition :heart_eyes:
 
