@@ -13,7 +13,6 @@ if ('ontouchstart' in window || navigator.maxTouchPoints)
 /* document ready
 ---------------------------------------------------------------------*/
 $(document).ready(function() {
-    if (!isMobile) {
         $('a').hover(function() {
             /* Stuff to do when the mouse enters the element */
             // console.log("hover enter");
@@ -27,7 +26,6 @@ $(document).ready(function() {
             $('.container').css('background-image', 'none');
             $('.container').removeClass('hovering');
         });
-    }
 });
 
 /* functions
