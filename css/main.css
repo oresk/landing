@@ -11,10 +11,15 @@
     --ink: #14130f;
     --highlight: #ffec3d;
 
-    /* Body size is the whole type scale. Tuned so the justified paragraph keeps
-       a ~55-65 character measure on desktop and ~35 on a phone, instead of the
-       old fixed 36px that broke to 18px below 768px. */
-    --step: clamp(1.0625rem, 0.575rem + 2vw, 3.4rem);
+    /* Body size is the whole type scale. It tracks the window so the justified
+       paragraph keeps roughly the same number of characters per line — ~35 on a
+       phone, 65 to 82 from 1440 upward — instead of the old fixed 36px that
+       broke to 18px below 768px and 138 characters per line at 3840.
+       The ceiling is deliberately high (8rem): the type keeps growing with the
+       window rather than freezing at some width and leaving the line to stretch
+       on its own, so a big screen gets bigger letters and the text still reaches
+       both edges. It only bites past ~7600px. */
+    --step: clamp(1.0625rem, 0.575rem + 2vw, 8rem);
     /* Hierarchy: the name is the hero, the link rows sit a notch under the bio.
        Both derive from --step so the ratios hold at every width; the nav keeps a
        floor so it stays a legal tap target, and no ceiling so it stays
