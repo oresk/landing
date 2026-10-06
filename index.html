@@ -35,13 +35,23 @@
 </head>
 
 <body>
-    <!-- Full-bleed images revealed by the .peek words below. Decorative: the
+    <!-- Full-bleed clips revealed by the .peek words below. Decorative: the
          text already says what they show, so they are hidden from AT and the
-         page works with JS disabled. -->
+         page works with JS disabled. preload="none" until JS asks for a layer;
+         source order picks webm (smaller) wherever it is supported. -->
     <div class="peek-stage" aria-hidden="true">
-        <img class="peek-stage__media" data-media="miata" data-src="img/miata.gif" alt="" decoding="async">
-        <img class="peek-stage__media" data-media="sail" data-src="img/sail.gif" alt="" decoding="async">
-        <img class="peek-stage__media" data-media="books" data-src="img/books.gif" alt="" decoding="async">
+        <video class="peek-stage__media" data-media="miata" muted loop playsinline preload="none">
+            <source src="img/miata.webm" type="video/webm">
+            <source src="img/miata.mp4" type="video/mp4">
+        </video>
+        <video class="peek-stage__media" data-media="sail" muted loop playsinline preload="none">
+            <source src="img/sail.webm" type="video/webm">
+            <source src="img/sail.mp4" type="video/mp4">
+        </video>
+        <video class="peek-stage__media" data-media="books" muted loop playsinline preload="none">
+            <source src="img/books.webm" type="video/webm">
+            <source src="img/books.mp4" type="video/mp4">
+        </video>
         <div class="peek-stage__scrim"></div>
     </div>
 

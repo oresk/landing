@@ -1,10 +1,11 @@
 /* Peek — hovering (or tapping) the words car / sail / books fills the screen
-   with the matching image. Progressive enhancement: without this file the
-   page is complete, the images are simply never shown.
+   with the matching clip. Progressive enhancement: without this file the page
+   is complete, the media is simply never shown.
 
-   Replaces the old jQuery version, which set a background-image per hover
-   without ever preloading it, so the first hover showed nothing until the
-   multi-megabyte GIF had downloaded. */
+   Replaces the old jQuery version, which set a background-image on hover with
+   no prefetch, so the first hover showed nothing until the multi-megabyte GIF
+   had arrived — and which did nothing at all on a phone, where there is no
+   hover and the words were fake links. */
 (() => {
     'use strict';
 
@@ -13,50 +14,82 @@
     if (!stage || !triggers.length) return;
 
     const layers = new Map();
-    for (const img of stage.querySelectorAll('[data-media]')) layers.set(img.dataset.media, img);
+    for (const video of stage.querySelectorAll('[data-media]')) layers.set(video.dataset.media, video);
 
-    const root = document.documentElement;
-    const canHover = matchMedia('(hover: hover) and (pointer: fine)');
+    const html = document.documentElement;
     let shown = null;   // name of the layer currently on screen
     let pending = 0;    // bumped to abandon a load that a newer hover replaced
     let unhover;        // pending hide, cancelled when the pointer moves to another word
 
-    function load(img) {
-        if (!img.src) img.src = img.dataset.src;
-        return img.decode ? img.decode().then(() => true, () => false) : Promise.resolve(true);
+    /* Resolves true once the video has a frame it can paint. */
+    function ready(video) {
+        if (video.readyState >= 2 && !video.seeking) return Promise.resolve(true);
+
+        return new Promise((resolve) => {
+            let timer;
+            const settle = (ok) => {
+                clearTimeout(timer);
+                video.removeEventListener('loadeddata', onReady);
+                video.removeEventListener('seeked', onReady);
+                video.removeEventListener('error', onError);
+                resolve(ok);
+            };
+            const onReady = () => settle(true);
+            const onError = () => settle(false);
+            // loadeddata for the first frame of a cold fetch; seeked for the
+            // restart below. Both drop readyState below HAVE_CURRENT_DATA, and
+            // loadeddata never fires a second time for media that is already
+            // buffered — waiting on it alone left every re-hover playing
+            // invisibly until the timeout.
+            video.addEventListener('loadeddata', onReady);
+            video.addEventListener('seeked', onReady);
+            video.addEventListener('error', onError);
+            // A stalled fetch must not leave the page sitting behind the scrim.
+            timer = setTimeout(() => settle(false), 10000);
+        });
     }
 
     async function show(name) {
-        const img = layers.get(name);
-        if (!img || shown === name) return;
+        const video = layers.get(name);
+        if (!video || shown === name) return;
 
         const token = ++pending;
         const previous = shown ? layers.get(shown) : null;
         shown = name;
         // Dim the page and invert the text on the same frame as the hover/tap.
-        // The fade-in below only starts once the image is decodable, which on a
-        // cold phone cache can take seconds — silence there reads as "the tap
-        // did nothing", which is how the old jQuery version behaved everywhere.
-        root.classList.add('peeking');
+        // The fade-in below waits for a decodable frame, which on a cold cache
+        // is not instant — silence there reads as "nothing happened", which is
+        // how the old version behaved on touch.
+        html.classList.add('peeking');
 
-        if (!await load(img)) { hide(); return; }
-        if (token !== pending) return;   // a different word won the race
+        // play() is what starts the fetch, and muted + playsinline means nothing
+        // can refuse it. It is also what nudges iOS, which treats preload as a
+        // hint and otherwise sits on metadata forever.
+        if (video.currentTime > 0) video.currentTime = 0;
+        video.play().catch(() => {});
 
-        img.classList.add('is-visible'); // fade in the new layer before dropping
-        if (previous) previous.classList.remove('is-visible');   // the old one: crossfade
+        const ok = await ready(video);
+        if (token !== pending) {                       // a different word won the race
+            if (shown !== name) video.pause();
+            return;
+        }
+        if (!ok) { hide(); return; }
 
-        // Touch devices get no idle prefetch, so spend the bandwidth only once
-        // the user has actually asked for a picture: the next tap is instant.
-        if (!canHover.matches) {
-            for (const [other, layer] of layers) if (other !== name) load(layer);
+        video.classList.add('is-visible');  // fade the new layer in before dropping
+        if (previous) {
+            previous.classList.remove('is-visible');   // the old one: crossfade
+            previous.pause();
         }
     }
 
     function hide() {
         pending++;
         shown = null;
-        for (const img of layers.values()) img.classList.remove('is-visible');
-        root.classList.remove('peeking');
+        for (const video of layers.values()) {
+            video.classList.remove('is-visible');
+            video.pause();               // stop decoding offscreen
+        }
+        html.classList.remove('peeking');
     }
 
     for (const el of triggers) {
@@ -74,7 +107,7 @@
             unhover = setTimeout(hide, 0);
         });
 
-        // Touch has no hover state, so a tap toggles the image on and off.
+        // Touch has no hover state, so a tap toggles the clip on and off.
         el.addEventListener('click', (event) => {
             if (event.pointerType === 'mouse') return;
             if (shown === name) hide();
@@ -85,11 +118,4 @@
     document.addEventListener('pointerdown', (event) => {
         if (!event.target.closest('[data-peek]')) hide();
     });
-
-    // Warm the cache once the page is idle so the first hover is instant. Skipped
-    // on touch-only devices and for visitors who asked to save data.
-    (window.requestIdleCallback || ((fn) => setTimeout(fn, 200)))(() => {
-        if (!canHover.matches || navigator.connection?.saveData) return;
-        for (const img of layers.values()) load(img);
-    }, { timeout: 2000 });
 })();
