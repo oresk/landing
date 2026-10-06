@@ -106,7 +106,11 @@ body {
 
 .links ul {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    /* Content-sized columns spread to the edges, like the old
+       justify-content: space-between flex rows — equal 1fr columns could overlap
+       at ~650px, where "PGP pub key" is wider than a quarter of the page. */
+    grid-template-columns: repeat(4, auto);
+    justify-content: space-between;
     column-gap: 1em;
     row-gap: 0.35em;
     margin: 0;
@@ -130,7 +134,10 @@ a,
 .peek {
     position: relative;
     color: inherit;
-    text-decoration: none;
+    text-decoration: underline;
+    text-decoration-thickness: max(1px, 0.05em);
+    text-underline-offset: 0.18em;
+    transition: text-decoration-color var(--strike-dur) var(--ease);
 }
 
 a::after,
@@ -146,8 +153,14 @@ a::after,
     pointer-events: none;
 }
 
+/* On hover the underline fades out as the strike slides in — same swap the old
+   page made, just animated. Keyboard focus keeps the underline and gets a ring. */
+a:hover,
+.peek:hover {
+    text-decoration-color: transparent;
+}
+
 a:hover::after,
-a:focus-visible::after,
 .peek:hover::after {
     transform: translateY(-50%) scaleX(1);
 }
@@ -211,7 +224,7 @@ html.peeking .peek-stage__scrim {
     }
 
     .links ul {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(2, auto);
         row-gap: 0.5em;
     }
 
