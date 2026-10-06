@@ -88,8 +88,7 @@ body {
     gap: 1em;
 }
 
-.masthead h1,
-.masthead p {
+.masthead h1 {
     margin: 0;
     font-size: inherit;
     font-weight: inherit;
