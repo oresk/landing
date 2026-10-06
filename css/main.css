@@ -149,14 +149,21 @@ a,
     text-decoration: underline;
     text-decoration-thickness: max(1px, 0.05em);
     text-underline-offset: 0.18em;
-    transition: text-decoration-color var(--strike-dur) var(--ease);
     /* no grey tap flash, no double-tap zoom delay on the peek words */
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
 }
 
-a::after,
-.peek::after {
+a {
+    transition: text-decoration-color var(--strike-dur) var(--ease);
+}
+
+/* A link lives in the grid, one line, so its strike can be a pseudo-element
+   that slides in. A peek span sits inside a justified paragraph and is allowed
+   to wrap — there a pseudo-element would draw a single strike across the first
+   line box — so those use the engine's own text-decoration, which stays right
+   across line breaks. */
+a::after {
     content: "";
     position: absolute;
     inset: 50% 0 auto 0;
@@ -168,16 +175,26 @@ a::after,
     pointer-events: none;
 }
 
-/* On hover the underline fades out as the strike slides in — same swap the old
-   page made, just animated. Keyboard focus keeps the underline and gets a ring. */
-a:hover,
-.peek:hover {
+/* Underline fades out as the strike slides in. Keyboard focus keeps the
+   underline and gets a ring instead. */
+a:hover {
     text-decoration-color: transparent;
 }
 
-a:hover::after,
-.peek:hover::after {
+a:hover::after {
     transform: translateY(-50%) scaleX(1);
+}
+
+/* Peek spans wear a dotted underline so they can be told apart from real links
+   before you touch them, and zoom-in confirms what they do. Hovering is the
+   same underline-to-strike swap the page always had. */
+.peek {
+    text-decoration-style: dotted;
+    cursor: zoom-in;
+}
+
+.peek:hover {
+    text-decoration: line-through solid;
 }
 
 a:focus-visible {
@@ -249,9 +266,12 @@ html.peeking .peek-stage__scrim {
 }
 
 @media (hover: none) {
-    a:active::after,
-    .peek:active::after {
+    a:active::after {
         transform: translateY(-50%) scaleX(1);
+    }
+
+    .peek:active {
+        text-decoration: line-through solid;
     }
 }
 
