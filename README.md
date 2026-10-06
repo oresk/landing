@@ -13,7 +13,8 @@ preprocessor any more.)
 | Path | What it is |
 | --- | --- |
 | `index.html` | The page. |
-| `css/main.css` | All styling. Hand-written, custom properties, one fluid type scale. |
+| `css/main.css` | All styling, including the self-hosted `@font-face`. Hand-written, custom properties, one fluid type scale. |
+| `fonts/` | Poppins 400, the latin and latin-ext subsets (13.5 KB total) plus `OFL.txt`, the SIL Open Font License it is under. |
 | `js/main.js` | The peek effect. ~120 lines, no dependencies. |
 | `img/*.webm`, `img/*.mp4` | The clips revealed by the peek words, one pair each. |
 | `img/*.gif` | Masters the clips were encoded from. Not served. |
@@ -86,4 +87,5 @@ python3 -m http.server 8099
 Design after [maxinetsang.com](http://maxinetsang.com/) by Maxine Tsang, via the
 HTML5 Boilerplate + Bourbon starter by Christian Gimber (see `LICENSE`).
 Typeface: [Poppins](https://fonts.google.com/specimen/Poppins) by Indian Type
-Foundry.
+Foundry, self-hosted in `fonts/` under the SIL Open Font License — see
+`fonts/OFL.txt`.
