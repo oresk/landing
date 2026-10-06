@@ -1,61 +1,70 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <title>Page Not Found</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap">
     <style>
-        @import url('https://fonts.googleapis.com/css?family=Poppins');
-        
-        * {
-            line-height: 1.2;
-            margin: 0;
+        :root {
+            color-scheme: light dark;
+            --paper: #fdfcfa;
+            --ink: #14130f;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --paper: #0e0e0f;
+                --ink: #f4f2ee;
+            }
         }
 
         html {
-            color: #888;
-            display: table;
-            font-family: 'Poppins', sans-serif;
-            height: 100%;
-            text-align: center;
-            width: 100%;
+            background: var(--paper);
+            color: var(--ink);
+            font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
         }
 
         body {
-            display: table-cell;
-            vertical-align: middle;
-            margin: 2em auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5em;
+            min-height: 100vh;
+            min-height: 100svh;
+            margin: 0;
+            padding: 2em;
+            text-align: center;
         }
 
         h1 {
-            color: #555;
-            font-size: 2em;
+            margin: 0;
+            font-size: clamp(1.5rem, 1rem + 3vw, 3rem);
             font-weight: 400;
         }
 
-        p {
-            margin: 0 auto;
-            width: 280px;
+        a {
+            color: inherit;
+            font-size: 0.9rem;
+            letter-spacing: 0.02em;
+            text-underline-offset: 0.25em;
         }
 
-        @media only screen and (max-width: 280px) {
-
-            body, p {
-                width: 95%;
-            }
-
-            h1 {
-                font-size: 1.5em;
-                margin: 0 0 0.3em;
-            }
-
+        a:hover {
+            text-decoration-thickness: 2px;
         }
-
     </style>
 </head>
+
 <body>
     <h1>¯ \_(ツ)_/¯</h1>
-    <!-- <p>Sorry, but the page you were trying to view does not exist.</p> -->
+    <a href="/">back to oreskovic.me</a>
 </body>
+
 </html>
-<!-- IE needs 512+ bytes: http://blogs.msdn.com/b/ieinternals/archive/2010/08/19/http-error-pages-in-internet-explorer.aspx -->
