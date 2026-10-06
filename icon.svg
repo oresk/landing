@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Lovro Orešković">
+    <!-- Monogram: a serif L, taken from Spectral Bold's own outline (extracted from
+         the font file with fontTools) rather than drawn by hand.
+
+         Centred on both axes at 70% of the tile — 358px tall, 300px wide in a 512
+         box, leaving 77px above and below and 106px left and right. Nothing bleeds
+         off any edge: the corner-cropped and tile-filling passes read as clipped
+         rather than composed and were dropped.
+
+         Spectral Bold, one step up from SemiBold, which was in turn a step up from
+         Regular. Heavier weights are proportionally wider — the L measures 0.803 of
+         its height at 600 and 0.838 at 700 — so the side margins tighten a little as
+         the strokes thicken, which is why the size is specified as a height.
+
+         The tile is full-bleed rather than rounded on purpose: iOS crops the corners
+         off an apple-touch-icon itself and renders transparency as black, so a
+         rounded source comes out with black corners on a home screen. -->
+    <rect fill="#fdfcfa" width="512" height="512"/>
+    <path fill="#14130f" d="M105.9 435.2V426.5L152 404.2V107.8L105.9 85.5V76.8H285.6V85.5L234 107.8V405.3H353.5L397.5 302.7H406.1V435.2Z"/>
+    <!-- Browsers that support it follow the page's own dark scheme. Without it the
+         attributes above still apply. -->
+    <style>
+        @media (prefers-color-scheme: dark) {
+            rect { fill: #0e0e0f; }
+            path { fill: #f4f2ee; }
+        }
+    </style>
+</svg>
