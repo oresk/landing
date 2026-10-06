@@ -15,6 +15,12 @@
        a ~55-65 character measure on desktop and ~35 on a phone, instead of the
        old fixed 36px that broke to 18px below 768px. */
     --step: clamp(1.0625rem, 0.575rem + 2vw, 3.4rem);
+    /* Hierarchy: the name is the hero, the link rows sit a notch under the bio.
+       Both derive from --step so the ratios hold at every width; the nav keeps a
+       floor so it stays a legal tap target, and no ceiling so it stays
+       proportional on a big screen. */
+    --name-step: calc(var(--step) * 1.4);
+    --nav-step: max(0.875rem, calc(var(--step) * 0.87));
     --pad: clamp(1.5rem, 3.2vw, 5.5rem);
     --line: 1.35;
 
@@ -91,9 +97,12 @@ body {
 .masthead h1,
 .masthead p {
     margin: 0;
-    font-size: inherit;
     font-weight: inherit;
     line-height: 1;
+}
+
+.masthead h1 {
+    font-size: var(--name-step);
 }
 
 .about {
@@ -111,6 +120,9 @@ body {
        at ~650px, where "PGP pub key" is wider than a quarter of the page. */
     grid-template-columns: repeat(4, auto);
     justify-content: space-between;
+    /* underlined text reads heavier than it measures, so the rows sit under the
+       bio rather than level with it */
+    font-size: var(--nav-step);
     column-gap: 1em;
     row-gap: 0.35em;
     margin: 0;
