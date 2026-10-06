@@ -138,6 +138,9 @@ a,
     text-decoration-thickness: max(1px, 0.05em);
     text-underline-offset: 0.18em;
     transition: text-decoration-color var(--strike-dur) var(--ease);
+    /* no grey tap flash, no double-tap zoom delay on the peek words */
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
 a::after,

@@ -23,7 +23,7 @@
 
     function load(img) {
         if (!img.src) img.src = img.dataset.src;
-        return img.decode ? img.decode().catch(() => {}) : Promise.resolve();
+        return img.decode ? img.decode().then(() => true, () => false) : Promise.resolve(true);
     }
 
     async function show(name) {
@@ -31,13 +31,25 @@
         if (!img || shown === name) return;
 
         const token = ++pending;
-        await load(img);
+        const previous = shown ? layers.get(shown) : null;
+        shown = name;
+        // Dim the page and invert the text on the same frame as the hover/tap.
+        // The fade-in below only starts once the image is decodable, which on a
+        // cold phone cache can take seconds — silence there reads as "the tap
+        // did nothing", which is how the old jQuery version behaved everywhere.
+        root.classList.add('peeking');
+
+        if (!await load(img)) { hide(); return; }
         if (token !== pending) return;   // a different word won the race
 
-        if (shown) layers.get(shown).classList.remove('is-visible');
-        shown = name;
-        img.classList.add('is-visible');
-        root.classList.add('peeking');
+        img.classList.add('is-visible'); // fade in the new layer before dropping
+        if (previous) previous.classList.remove('is-visible');   // the old one: crossfade
+
+        // Touch devices get no idle prefetch, so spend the bandwidth only once
+        // the user has actually asked for a picture: the next tap is instant.
+        if (!canHover.matches) {
+            for (const [other, layer] of layers) if (other !== name) load(layer);
+        }
     }
 
     function hide() {
